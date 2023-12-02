@@ -1,10 +1,14 @@
-cmake_minimum_required(VERSION 3.25)
-project(openglExample)
+cmake_minimum_required(VERSION 3.6)
 
-set(CMAKE_CXX_STANDARD 17)
+project(imguiWidget VERSION 1 LANGUAGES CXX)
 
-include_directories(./)
+set(CMAKE_CXX_STANDARD 20)
 
+include_directories( ${PROJECT_SOURCE_DIR}/ )
+include_directories( ${PROJECT_SOURCE_DIR}/include )
+include_directories( ${PROJECT_SOURCE_DIR}/imgui )
+
+find_package(X11 REQUIRED)
 find_package(SFML COMPONENTS system graphics audio network REQUIRED)
 
 set(IMGUI
@@ -25,6 +29,23 @@ set(IMGUI
         imgui/imgui-SFML_export.h
 )
 
-add_executable(${PROJECT_NAME} main.cpp ${IMGUI})
+set(SOURCES
+        main.cpp
+)
 
-target_link_libraries(${PROJECT_NAME} GL sfml-window sfml-network sfml-graphics sfml-system)
+set(IMGUIWIDGETS
+        imguiWidget/imguiWindow.h
+        imguiWidget/imguiObject.h
+        imguiWidget/imguiLayout.h
+        imguiWidget/imguiWidget.h
+)
+
+add_executable(${PROJECT_NAME} ${SOURCES} ${IMGUI} ${IMGUIWIDGETS})
+
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME} PRIVATE sfml-window sfml-network sfml-graphics sfml-system opengl32 websockets)
+endif()
+
+if(UNIX)
+    target_link_libraries(${PROJECT_NAME} PRIVATE sfml-window sfml-network sfml-graphics sfml-system GL websockets X11::X11)
+endif()
