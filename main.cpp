@@ -1,80 +1,94 @@
-//#include <imgui/imgui.h>
-//#include <imgui/imgui-SFML.h>
-//
-//#include <SFML/Graphics/RenderWindow.hpp>
-//#include <SFML/System/Clock.hpp>
-//#include <SFML/Window/Event.hpp>
-//#include <SFML/Network.hpp>
-//
-//#include <vector>
-//#include <string>
-//#include <cmath>
-
+/*
 #include <imguiWidget/imguiWindow.h>
-
-//void draw_table(std::vector<std::vector<std::string> > &table, const std::string& title = "Table", ImGuiTableFlags flags = ImGuiTableFlags_None)
-//{
-//    if ( !table.empty() )
-//    {
-//        if ( table.at(0).empty() ) return;
-//    } else return;
-//
-//    if ( 1 == ImGui::BeginTable(title.c_str(), (int)table.at(0).size(), flags))
-//    {
-//        for ( std::string &item : table.at(0) )
-//        {
-//            ImGui::TableSetupColumn(item.c_str());
-//        }
-//
-//        for ( std::vector<std::string> &column : table )
-//        {
-//            for (std::string &item : column)
-//            {
-//                ImGui::TableNextColumn();
-//                ImGui::Text("%s", item.c_str());
-//            }
-//        }
-//        ImGui::EndTable();
-//    }
-//}
-//
-//
-//float value_oX = 0;
-//float value_oY = 0;
-//
-//void display(ImVec2 size)
-//{
-//    ImGui::Begin("Example", nullptr, ImGuiWindowFlags_NoResize + ImGuiWindowFlags_NoTitleBar + ImGuiWindowFlags_NoMove);
-//    ImGui::SetWindowPos({0,0});
-//    ImGui::SetWindowSize({size.x,size.y});
-//
-//    auto drawList = ImGui::GetWindowDrawList();
-//    int width = 120;
-//
-//    ImGui::SliderAngle("Slider_oX", &value_oX, -16000, 16000);
-//    ImGui::SliderAngle("Slider_oY", &value_oY, -16000, 16000);
-//
-//    float angle_oX = value_oX * 9 / 1600;
-//    float x = (std::sin(angle_oX) * 120);
-//    ImVec2 center_oX = {ImGui::GetWindowPos().x + 300,ImGui::GetWindowPos().y + 100};
-//    int Y_oX = (int)center_oX.y;
-//    drawList->AddLine(center_oX, {center_oX.x + (float)width, (float)Y_oX + x}, ImColor(237, 60, 202), 4);
-//    drawList->AddLine(center_oX, {center_oX.x - (float)width, (float)Y_oX - x}, ImColor(237, 60, 202), 4);
-//
-//    float angle_oY = value_oY * 9 / 1600;
-//    float y = (std::sin(angle_oY) * 120);
-//    ImVec2 center_oY = {ImGui::GetWindowPos().x + 300,ImGui::GetWindowPos().y + 400};
-//    int Y_oY = (int)center_oY.y;
-//    drawList->AddLine(center_oY, {center_oY.x + (float)width, (float)Y_oY + y}, ImColor(0, 127, 255), 4);
-//    drawList->AddLine(center_oY, {center_oY.x - (float)width, (float)Y_oY - y}, ImColor(0, 127, 255), 4);
-//
-//
-//
-//    ImGui::End();
-//}
+#include <imguiWidget/imguiWidgetButton.h>
+#include <imguiWidget/imguiLayout.h>
 
 int main()
 {
     imguiWindow window;
-    return window.run();
+    imguiLayout layout(LayoutType::LayoutType_Vertical);
+    window.setLayout(layout);
+
+    imguiWidgetButton b1("Button1");
+    imguiWidgetButton b2("Button2");
+
+    layout.addWidget(&b1);
+    layout.addWidget(&b2);
+
+    return window.draw();
+}
+*/
+
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+#include <imgui-SFML.h>
+#include <imgui.h>
+
+char buff1[1024] = "";
+char buff2[1024] = "";
+
+void display(ImVec2 size)
+{
+    ImGui::Begin("Title", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoTitleBar + ImGuiWindowFlags_NoResize);
+    ImGui::SetWindowPos({0,0});
+    ImGui::SetWindowSize(size);
+
+
+    auto style = &ImGui::GetStyle();
+
+    style->WindowPadding = ImVec2(0, 0);
+    style->FramePadding = ImVec2(0, 0);
+    style->ItemSpacing = ImVec2(0, 0);
+    style->FrameBorderSize = 0.0f;
+
+    int n = 2;
+
+    auto flags1 = ImGuiInputTextFlags_None;
+    ImGui::InputTextMultiline("##InputText1", buff1, IM_ARRAYSIZE(buff1), {(float)size.x, (float)size.y/n},flags1);
+
+    auto flags2 = ImGuiInputTextFlags_None;
+    ImGui::InputTextMultiline("##InputText2", buff2, IM_ARRAYSIZE(buff2), {(float)size.x, (float)size.y/n},flags2);
+
+    ImGui::End();
+}
+
+int main()
+{
+    auto window_ = sf::RenderWindow(sf::VideoMode(800, 480), "Window");
+    window_.setFramerateLimit(100);
+
+    if(ImGui::SFML::Init(window_))
+    {
+        ImGuiIO& io = ImGui::GetIO();
+        ImFont* customFont = io.Fonts->AddFontFromFileTTF("font.ttf", 100.0f);
+        if (!ImGui::SFML::UpdateFontTexture())
+        {
+            return 1;
+        }
+
+        sf::Clock deltaClock;
+        while (window_.isOpen())
+        {
+            sf::Event event{};
+            while (window_.pollEvent(event))
+            {
+                ImGui::SFML::ProcessEvent(window_, event);
+                if (event.type == sf::Event::Closed)
+                {
+                    window_.close();
+                }
+            }
+            ImGui::SFML::Update(window_, deltaClock.restart());
+            ImGui::PushFont(customFont);
+
+
+            display({(float)window_.getSize().x, (float)window_.getSize().y});
+
+            ImGui::PopFont();
+            window_.clear();
+            ImGui::SFML::Render(window_);
+            window_.display();
+        }
+        ImGui::SFML::Shutdown();
+    }
 }

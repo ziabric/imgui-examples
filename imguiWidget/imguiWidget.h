@@ -2,7 +2,7 @@
 
 #include <imguiWidget/imguiObject.h>
 
-class imguiWidget : private imguiObject
+class imguiWidget : public imguiObject
 {
 public:
     imguiWidget() = default;

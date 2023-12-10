@@ -39,7 +39,6 @@ public:
         }
         else if (objects_.size() > 1)
         {
-            objectPos posNextObject = this->getPos();
             switch (type_)
             {
                 case LayoutType::LayoutType_Vertical:
@@ -48,7 +47,7 @@ public:
 
                     for (auto object : objects_)
                     {
-                        object->draw();
+                        object->draw({getSize().first, heightOfObject});
                     }
                     break;
             }
@@ -57,5 +56,5 @@ public:
     }
 private:
     std::vector<imguiObject*> objects_ = {};
-    LayoutType type_ = LayoutType::LayoutType_Vertical;
+    LayoutType type_;
 };

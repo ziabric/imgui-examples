@@ -1,0 +1,22 @@
+void display(ImVec2 size)
+{
+    ImGui::Begin("Title", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoTitleBar + ImGuiWindowFlags_NoResize);
+    ImGui::SetWindowPos({0,0});
+    ImGui::SetWindowSize(size);
+
+    auto style = &ImGui::GetStyle();
+
+    style->WindowPadding = ImVec2(0, 0);
+    style->FramePadding = ImVec2(0, 0);
+    style->ItemSpacing = ImVec2(0, 0);
+    style->FrameBorderSize = 0.0f;
+
+    int n = 10;
+    for (int i = 0; i < n; i += 1)
+    {
+        ImGui::Button(std::string("Button" + std::to_string(i)).c_str(), {(float)size.x, (float)size.y/(float)n });
+    }
+
+    ImGui::End();
+}
+}

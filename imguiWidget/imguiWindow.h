@@ -15,7 +15,7 @@
 #include <imguiWidget/imguiWidget.h>
 
 
-class imguiWindow : private imguiObject
+class imguiWindow : public imguiObject
 {
 public:
     imguiWindow()
@@ -47,7 +47,7 @@ public:
                 ImGui::SetWindowPos({0,0});
                 ImGui::SetWindowSize({(float)window_->getSize().x, (float)window_->getSize().y});
 
-                //layout_->draw();
+                layout_.draw(nullptr);
 
                 ImGui::End();
 
@@ -59,8 +59,12 @@ public:
         }
         return 0;
     }
+    void setLayout(const imguiLayout& layout)
+    {
+        layout_ = layout;
+    }
 
 private:
     std::shared_ptr<sf::RenderWindow> window_;
-    std::shared_ptr<imguiLayout> layout_;
+    imguiLayout layout_ = {LayoutType::LayoutType_Vertical};
 };

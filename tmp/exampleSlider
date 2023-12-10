@@ -1,0 +1,72 @@
+std::vector<int> values = {0,0,0,0,0,0,0,0};
+
+void display(ImVec2 size)
+{
+    ImGui::Begin("Title", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoTitleBar + ImGuiWindowFlags_NoResize);
+    ImGui::SetWindowPos({0,0});
+    ImGui::SetWindowSize(size);
+
+
+    auto style = &ImGui::GetStyle();
+
+    style->WindowPadding = ImVec2(0, 0);
+    style->FramePadding = ImVec2(0, 0);
+    style->ItemSpacing = ImVec2(0, 0);
+    style->FrameBorderSize = 0.0f;
+
+    int n = values.size();
+    for (int i = 0; i < n; i += 1)
+    {
+        auto font = ImGui::GetFont();
+        font->Scale = size.y * 0.01 / n;
+
+        ImGui::PushItemWidth((float)size.x);
+        ImGui::SliderInt(std::string("##Slider" + std::to_string(i + 1)).c_str(), &values[i], 1, 10, "");
+        ImGui::PopItemWidth();
+    }
+
+    ImGui::End();
+}
+
+int main()
+{
+    auto window_ = sf::RenderWindow(sf::VideoMode(800, 480), "Window");
+    window_.setFramerateLimit(100);
+
+    if(ImGui::SFML::Init(window_))
+    {
+        // Загрузка пользовательского шрифта
+        ImGuiIO& io = ImGui::GetIO();
+        ImFont* customFont = io.Fonts->AddFontFromFileTTF("font.ttf", 100.0f);
+        ImGui::SFML::UpdateFontTexture();
+        if (!customFont)
+        {
+            // Обработка ошибки, если шрифт не загружен
+            return 1;
+        }
+
+        sf::Clock deltaClock;
+        while (window_.isOpen())
+        {
+            sf::Event event{};
+            while (window_.pollEvent(event))
+            {
+                ImGui::SFML::ProcessEvent(window_, event);
+                if (event.type == sf::Event::Closed)
+                {
+                    window_.close();
+                }
+            }
+            ImGui::SFML::Update(window_, deltaClock.restart());
+            ImGui::PushFont(customFont);
+
+            void display();
+
+            ImGui::PopFont();
+            window_.clear();
+            ImGui::SFML::Render(window_);
+            window_.display();
+        }
+        ImGui::SFML::Shutdown();
+    }
+}

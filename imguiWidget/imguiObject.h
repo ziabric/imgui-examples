@@ -8,6 +8,8 @@
 using objectSize = std::pair<int, int>;
 using objectPos = std::pair<int, int>;
 
+static objectSize globalWindwSize_ = {0,0};
+
 class imguiObject
 {
 public:
@@ -37,13 +39,11 @@ public:
             size_ = globalWindwSize_;
         }
     }
-    virtual int draw(objectPos newPos, objectSize newSize)
+    virtual int draw(objectSize newSize)
     {
-        pos_ = newPos;
         size_ = newSize;
     }
 private:
     objectSize size_ = {0,0};
     objectPos pos_ = {0,0};
-    static objectSize globalWindwSize_;
 };
