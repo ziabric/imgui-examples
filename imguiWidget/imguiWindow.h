@@ -47,7 +47,16 @@ public:
                 ImGui::SetWindowPos({0,0});
                 ImGui::SetWindowSize({(float)window_->getSize().x, (float)window_->getSize().y});
 
-                layout_.draw(nullptr);
+                auto style = &ImGui::GetStyle();
+
+                style->WindowPadding = ImVec2(0, 0);
+                style->FramePadding = ImVec2(0, 0);
+                style->ItemSpacing = ImVec2(0, 0);
+                style->FrameBorderSize = 0.0f;
+
+                size_ = {window_->getSize().x, window_->getSize().y};
+
+                layout_->draw(this);
 
                 ImGui::End();
 
@@ -59,12 +68,12 @@ public:
         }
         return 0;
     }
-    void setLayout(const imguiLayout& layout)
+    void setLayout(imguiLayout* layout)
     {
         layout_ = layout;
     }
 
 private:
     std::shared_ptr<sf::RenderWindow> window_;
-    imguiLayout layout_ = {LayoutType::LayoutType_Vertical};
+    imguiLayout* layout_;
 };

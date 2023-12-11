@@ -9,7 +9,7 @@ enum class LayoutType
     LayoutType_Table
 };
 
-class imguiLayout : private imguiObject
+class imguiLayout : public imguiObject
 {
 public:
     imguiLayout(LayoutType type) : type_(type) {}
@@ -33,6 +33,8 @@ public:
     }
     int draw(const imguiObject* parent) override
     {
+        size_ = parent->size_;
+
         if (objects_.size() == 1)
         {
             objects_.at(0)->draw(this);
@@ -47,7 +49,7 @@ public:
 
                     for (auto object : objects_)
                     {
-                        object->draw({getSize().first, heightOfObject});
+                        object->draw({object->size_.first == -1 ? getSize().first : object->size_.first, object->size_.second == -1 ? heightOfObject : object->size_.second});
                     }
                     break;
             }

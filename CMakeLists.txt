@@ -38,6 +38,7 @@ set(IMGUIWIDGETS
         imguiWidget/imguiObject.h
         imguiWidget/imguiLayout.h
         imguiWidget/imguiWidget.h
+        imguiWidget/imguiWidgetButton.h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${IMGUI} ${IMGUIWIDGETS})
