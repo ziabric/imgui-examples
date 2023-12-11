@@ -30,9 +30,9 @@ public:
             objects_.pop_back();
         }
     }
-    int draw(const imguiObject* parent) override
+    int draw(objectSize newSize = {-1, -1}) override
     {
-        this->setSize(parent->getSize());
+        this->setSize(newSize);
 
         if (objects_.size() == 1)
         {

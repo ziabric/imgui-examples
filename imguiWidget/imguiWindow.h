@@ -65,7 +65,7 @@ public:
 
                 setSize({window_->getSize().x, window_->getSize().y});
 
-                layout_->draw(this);
+                layout_->draw(getSize());
 
                 ImGui::End();
 
