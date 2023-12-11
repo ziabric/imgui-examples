@@ -14,7 +14,7 @@ class imguiObject
 public:
     imguiObject() = default;
     ~imguiObject() = default;
-    objectSize getSize()
+    objectSize getSize() const
     {
         return size_;
     }
@@ -34,6 +34,6 @@ public:
         size_ = newSize;
     }
 
-public:
+private:
     objectSize size_ = {-1,-1};
 };

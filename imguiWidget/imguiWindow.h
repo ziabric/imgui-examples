@@ -29,6 +29,14 @@ public:
     {
         if(ImGui::SFML::Init(*window_))
         {
+            ImGuiIO& io = ImGui::GetIO();
+            ImFont* customFont = io.Fonts->AddFontFromFileTTF("font.ttf", 100.0f);
+            customFont->Scale = 0.15;
+            if (!ImGui::SFML::UpdateFontTexture())
+            {
+                return 1;
+            }
+
             sf::Clock deltaClock;
             while (window_->isOpen())
             {
@@ -42,6 +50,7 @@ public:
                     }
                 }
                 ImGui::SFML::Update(*window_, deltaClock.restart());
+                ImGui::PushFont(customFont);
 
                 ImGui::Begin("Title", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoTitleBar + ImGuiWindowFlags_NoResize);
                 ImGui::SetWindowPos({0,0});
@@ -54,12 +63,13 @@ public:
                 style->ItemSpacing = ImVec2(0, 0);
                 style->FrameBorderSize = 0.0f;
 
-                size_ = {window_->getSize().x, window_->getSize().y};
+                setSize({window_->getSize().x, window_->getSize().y});
 
                 layout_->draw(this);
 
                 ImGui::End();
 
+                ImGui::PopFont();
                 window_->clear();
                 ImGui::SFML::Render(*window_);
                 window_->display();
@@ -75,5 +85,5 @@ public:
 
 private:
     std::shared_ptr<sf::RenderWindow> window_;
-    imguiLayout* layout_;
+    imguiLayout* layout_{};
 };
