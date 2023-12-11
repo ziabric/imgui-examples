@@ -19,6 +19,8 @@ int main()
 {
     imguiWindow window;
     auto layout = std::make_shared<imguiLayout> (LayoutType::LayoutType_Horizontal);
+    auto layout2 = std::make_shared<imguiLayout> (LayoutType::LayoutType_Vertical);
+
     window.setLayout(layout.get());
 
     auto b1 = std::make_shared<imguiWidgetButton> ("Button1");
@@ -36,8 +38,9 @@ int main()
     b3->setCallback(func);
 
     layout->addWidget(b1.get());
-    layout->addWidget(b2.get());
-    layout->addWidget(b3.get());
+    layout->addWidget(layout2.get());
+    layout2->addWidget(b2.get());
+    layout2->addWidget(b3.get());
 
     return window.draw();
 }

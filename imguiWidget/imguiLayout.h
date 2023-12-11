@@ -76,7 +76,6 @@ public:
                     for (auto i = 0 ; i < objects_.size(); i += 1)
                     {
                         ImGui::SetColumnWidth(i, (float)(objects_.at(i)->getSize().first == -1 ? widthOfObject : objects_.at(i)->getSize().first));
-                        //ImGui::SetColumnOffset(i, 30);
                         objects_.at(i)->draw({objects_.at(i)->getSize().first == -1 ? widthOfObject : objects_.at(i)->getSize().first, objects_.at(i)->getSize().second == -1 ? getSize().second : objects_.at(i)->getSize().second});
                         ImGui::NextColumn();
                     }
