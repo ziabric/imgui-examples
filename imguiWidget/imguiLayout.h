@@ -71,7 +71,7 @@ public:
                     ImGui::Columns((int)objects_.size(), nullptr, false);
                     for (auto i = 0 ; i < objects_.size(); i += 1)
                     {
-                        ImGui::SetColumnWidth(i, (float)(objects_.at(i)->getSize().first == -1 ? widthOfObject : objects_.at(i)->getSize().first));
+                        ImGui::SetColumnWidth(i, (float)(!objects_.at(i)->getSizeStatus() ? widthOfObject : objects_.at(i)->getSize().first));
                         objects_.at(i)->draw({!objects_.at(i)->getSizeStatus() ? widthOfObject : objects_.at(i)->getSize().first, !objects_.at(i)->getSizeStatus() ? getSize().second : objects_.at(i)->getSize().second});
                         ImGui::NextColumn();
                     }

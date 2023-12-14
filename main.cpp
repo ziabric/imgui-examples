@@ -19,7 +19,7 @@ int main()
 {
     imguiWindow window;
     auto layout = std::make_shared<imguiLayout> (LayoutType::LayoutType_Vertical);
-    auto layout2 = std::make_shared<imguiLayout> (LayoutType::LayoutType_Horizontal);
+    auto layout2 = std::make_shared<imguiLayout> (LayoutType::LayoutType_Vertical);
     auto layout3 = std::make_shared<imguiLayout> (LayoutType::LayoutType_Vertical);
 
     window.setLayout(layout.get());
@@ -29,7 +29,7 @@ int main()
     auto b3 = std::make_shared<imguiWidgetButton> ("Button3");
     auto b4 = std::make_shared<imguiWidgetButton> ("Button4");
 
-    //b2->setSize({100, 300});
+    b2->setSize({600, 300}, true);
 
     b1->setCallback([](){
         std::cout<<"Hello from b1"<<std::endl;
