@@ -15,7 +15,7 @@
 #include <imguiWidget/imguiWidget.h>
 
 
-class imguiWindow : public imguiObject
+class imguiWindow
 {
 public:
     imguiWindow()
@@ -78,6 +78,16 @@ public:
         }
         return 0;
     }
+
+    void setSize(objectSize newSize)
+    {
+        size_ = newSize;
+    }
+    objectSize getSize()
+    {
+        return size_;
+    }
+
     void setLayout(imguiLayout* layout)
     {
         layout_ = layout;
@@ -86,4 +96,5 @@ public:
 private:
     std::shared_ptr<sf::RenderWindow> window_;
     imguiLayout* layout_{};
+    objectSize size_ = {0,0};
 };

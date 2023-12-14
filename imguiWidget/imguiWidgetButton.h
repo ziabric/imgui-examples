@@ -22,14 +22,6 @@ public:
         callback_ = std::move(callback);
     }
 
-    int draw(const imguiObject* parent = nullptr) override
-    {
-        auto size = getSize();
-        if (ImGui::Button(text_.c_str(), {(float)size.first, (float)size.second}))
-        {
-            callback_();
-        }
-    }
     int draw(objectSize newSize) override
     {
         if ( ImGui::Button(text_.c_str(), {(float)newSize.first, (float)newSize.second}) )

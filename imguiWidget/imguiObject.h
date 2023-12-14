@@ -7,8 +7,6 @@
 
 using objectSize = std::pair<int, int>;
 
-static objectSize globalWindwSize_ = {0,0};
-
 class imguiObject
 {
 public:
@@ -18,22 +16,15 @@ public:
     {
         return size_;
     }
-    void setSize(const objectSize& size)
+    void setSize(const objectSize& size, bool hasCustomSize = false)
     {
+        customSize_ = hasCustomSize;
         size_ = size;
     }
-    virtual int draw(const imguiObject* parent = nullptr)
-    {
-        if ( parent == nullptr )
-        {
-            size_ = globalWindwSize_;
-        }
-    }
-    virtual int draw(objectSize newSize)
-    {
-        size_ = newSize;
-    }
+    bool getSizeStatus() const { return customSize_;}
+    virtual int draw(objectSize newSize) = 0;
 
 private:
     objectSize size_ = {-1,-1};
+    bool customSize_ = false;
 };

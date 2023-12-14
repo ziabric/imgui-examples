@@ -1,6 +1,7 @@
 #pragma once
 
 #include <imguiWidget/imguiObject.h>
+#include <iostream>
 
 enum class LayoutType
 {
@@ -11,7 +12,7 @@ enum class LayoutType
 class imguiLayout : public imguiObject
 {
 public:
-    imguiLayout(LayoutType type) : type_(type) {}
+    explicit imguiLayout(LayoutType type) : type_(type) {}
     ~imguiLayout() = default;
     void addWidget(imguiObject* object)
     {
@@ -19,24 +20,19 @@ public:
     }
     void popWidget()
     {
-        delete objects_.back();
         objects_.pop_back();
     }
     void clear()
     {
-        while (!objects_.empty())
-        {
-            delete objects_.back();
-            objects_.pop_back();
-        }
+        objects_.clear();
     }
     int draw(objectSize newSize = {-1, -1}) override
     {
-        this->setSize(newSize);
+        setSize(newSize, false);
 
         if (objects_.size() == 1)
         {
-            objects_.at(0)->draw(this);
+            objects_.at(0)->draw(getSize());
         }
         else if (objects_.size() > 1)
         {
@@ -48,7 +44,7 @@ public:
                 case LayoutType::LayoutType_Vertical:
                     for ( auto object : objects_ )
                     {
-                        if (object->getSize().second != -1)
+                        if (object->getSize().second != -1 && object->getSizeStatus())
                         {
                             countTmp += 1;
                             heightOfObject += object->getSize().second;
@@ -58,13 +54,13 @@ public:
 
                     for (auto object : objects_)
                     {
-                        object->draw({object->getSize().first == -1 ? getSize().first : object->getSize().first, object->getSize().second == -1 ? heightOfObject : object->getSize().second});
+                        object->draw({!object->getSizeStatus() ? getSize().first : object->getSize().first, !object->getSizeStatus() ? heightOfObject : object->getSize().second});
                     }
                     break;
                 case LayoutType::LayoutType_Horizontal:
                     for ( auto object : objects_ )
                     {
-                        if (object->getSize().first != -1)
+                        if (object->getSize().first != -1 && object->getSizeStatus())
                         {
                             countTmp += 1;
                             widthOfObject += object->getSize().first;
@@ -76,7 +72,7 @@ public:
                     for (auto i = 0 ; i < objects_.size(); i += 1)
                     {
                         ImGui::SetColumnWidth(i, (float)(objects_.at(i)->getSize().first == -1 ? widthOfObject : objects_.at(i)->getSize().first));
-                        objects_.at(i)->draw({objects_.at(i)->getSize().first == -1 ? widthOfObject : objects_.at(i)->getSize().first, objects_.at(i)->getSize().second == -1 ? getSize().second : objects_.at(i)->getSize().second});
+                        objects_.at(i)->draw({!objects_.at(i)->getSizeStatus() ? widthOfObject : objects_.at(i)->getSize().first, !objects_.at(i)->getSizeStatus() ? getSize().second : objects_.at(i)->getSize().second});
                         ImGui::NextColumn();
                     }
                     ImGui::Columns(1);
